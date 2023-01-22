@@ -1,9 +1,8 @@
+import { MediaGrid, Navbar } from '@/components'
 import { useContext, useEffect, useMemo, useState } from 'react'
 
 import { GlobalContainer } from '@/styles/shared'
-import { MediaGrid } from '@/components/MediaGrid/MediaGrid'
 import { MoviesModel } from '@/models'
-import { Navbar } from '@/components'
 import { SearchContext } from '@/contexts/SearchContext'
 import axios from 'axios'
 import { useQuery } from 'react-query'

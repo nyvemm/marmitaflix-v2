@@ -1,8 +1,9 @@
 import * as S from './MediaGrid.styled'
 
-import { useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 
 import { ActivityIndicator } from '../ActivityIndicator/ActivityIndicator'
+import { ModalContext } from '@/contexts/ModalContext'
 import { MoviesModel } from '@/models'
 
 export type MediaGridProps = {
@@ -13,9 +14,10 @@ export type MediaGridProps = {
   hasEnded: boolean
 }
 
-export const MediaGrid = ({ movies, isLoading, error, hasEnded, onFetchMore }: MediaGridProps) => {
+export const MediaGrid = ({ movies, isLoading, onFetchMore }: MediaGridProps) => {
   const [isFetching, setIsFetching] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+  const { setSlug } = useContext(ModalContext)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -32,6 +34,10 @@ export const MediaGrid = ({ movies, isLoading, error, hasEnded, onFetchMore }: M
     return () => containerRef?.current?.removeEventListener('scroll', handleScroll)
   }, [isLoading, isFetching, onFetchMore])
 
+  const onPressItem = (slug: string) => {
+    setSlug(slug)
+  }
+
   useEffect(() => {
     setIsFetching(false)
   }, [movies])
@@ -42,7 +48,7 @@ export const MediaGrid = ({ movies, isLoading, error, hasEnded, onFetchMore }: M
     <>
       <S.MediaGridContainer ref={containerRef}>
         {movies.map((movie) => (
-          <S.MediaGridItem key={movie.title} src={movie.image} alt={movie.title} loading="lazy" />
+          <S.MediaGridItem key={movie.title} src={movie.image} alt={movie.title} loading="lazy" onClick={() => onPressItem(movie.slug)} />
         ))}
         {/* {isFetching && !hasEnded && <ActivityIndicator />} */}
       </S.MediaGridContainer>
