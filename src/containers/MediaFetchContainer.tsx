@@ -1,4 +1,4 @@
-import { MediaGrid, Navbar } from '@/components'
+import { MediaGrid, Navbar, NotFound } from '@/components'
 import { useContext, useEffect, useMemo, useState } from 'react'
 
 import { GlobalContainer } from '@/styles/shared'
@@ -24,6 +24,7 @@ export default function MediaFetchContainer({ searchUrl }: MediaFetchContainerPr
     if (searchInput !== oldSearchInput) {
       setMoviesData([])
       setPage(1)
+      setHasEnded(false)
       setOldSearchInput(searchInput)
     }
     if (searchUrl !== '') {
@@ -58,7 +59,11 @@ export default function MediaFetchContainer({ searchUrl }: MediaFetchContainerPr
         <Navbar />
       </header>
       <main>
-        <MediaGrid movies={moviesData || []} isLoading={isLoading} error={error} onFetchMore={onFetchMore} hasEnded={hasEnded} />
+        {hasEnded && page === 1 ? (
+          <NotFound />
+        ) : (
+          <MediaGrid movies={moviesData || []} isLoading={isLoading} error={error} onFetchMore={onFetchMore} hasEnded={hasEnded} />
+        )}
       </main>
     </GlobalContainer>
   )

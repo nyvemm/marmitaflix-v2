@@ -15,9 +15,12 @@ export type SinglePageProps = {
 const baseUrl = 'https://gomarmitaflix.herokuapp.com'
 
 export const SinglePage = ({ slug }: SinglePageProps) => {
-  const { data, isLoading, error } = useQuery(['movie', slug], async () => {
-    const { data } = await axios.get<MovieModel>(`${baseUrl}/movies/${slug}`)
-    return data
+  const { data, isLoading } = useQuery(['movie', slug], async () => {
+    if (slug && slug?.length > 0) {
+      const { data } = await axios.get<MovieModel>(`${baseUrl}/movies/${slug}`)
+      return data
+    }
+    return {} as MovieModel
   })
 
   if (isLoading)
@@ -47,7 +50,7 @@ export const SinglePage = ({ slug }: SinglePageProps) => {
         <S.SinglePageTitle onClick={() => onOpenImage(removeStringFromMovies(data?.title))}>
           {removeStringFromMovies(data?.title)}
         </S.SinglePageTitle>
-        <S.SinglePageDescription>{data?.description?.slice(0, 215)?.concat('...')}</S.SinglePageDescription>
+        <S.SinglePageDescription>{data?.description}</S.SinglePageDescription>
         {data?.links?.map((link) => (
           <S.SinglePageLinkContainer>
             <S.SinglePageLinkTitle>{link.label}</S.SinglePageLinkTitle>

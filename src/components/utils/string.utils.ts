@@ -34,5 +34,9 @@ export const removeStringFromMovies = (title?: string): string => {
     'Legendada',
     'CAM',
     'Google Drive',
+    '4K',
+    'Assistir Online',
+    '/ ',
+    '- '
   ])
 }

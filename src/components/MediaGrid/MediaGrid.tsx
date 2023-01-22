@@ -36,6 +36,7 @@ export const MediaGrid = ({ movies, isLoading, onFetchMore }: MediaGridProps) =>
 
   const onPressItem = (slug: string) => {
     setSlug(slug)
+    window.history.pushState(null, '', `?q=${slug}`)
   }
 
   useEffect(() => {

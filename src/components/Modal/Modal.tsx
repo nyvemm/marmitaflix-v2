@@ -57,10 +57,18 @@ const ModalOverlay = styled.div`
 `
 
 const ModalContent = styled.div`
-  
   max-width: 1000px;
   height: auto;
   background-color: #121212;
   border-radius: 19px;
   z-index: 999;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    height: 50vh;  
+    bottom: 0;
+    position: fixed;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  } ;
 `

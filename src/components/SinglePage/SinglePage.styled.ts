@@ -18,6 +18,10 @@ export const SinglePageImage = styled.img`
   &:hover {
     opacity: 0.8;
   }
+
+  @media (max-width: 600px) {
+    display: none;
+  } ;
 `
 
 export const SinglePageContent = styled.div`

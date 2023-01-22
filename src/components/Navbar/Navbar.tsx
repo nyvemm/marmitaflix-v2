@@ -21,12 +21,17 @@ export const Navbar = () => {
   }
 
   const onResetSearch = () => {
-    setSearchInput('')
-    setSearch('')
-    const url = new URL(window.location.href)
-    url.searchParams.delete('s')
-    window.history.pushState({}, '', url.toString())
+    window.location.href = '/'
+
   }
+
+  useEffect(() => {
+    const url = new URL(window.location.href)
+    const querySearch = url.searchParams.get('s')
+    if (querySearch) {
+      setSearch(querySearch)
+    }
+  }, [])
 
   return (
     <S.HeaderContainer>
