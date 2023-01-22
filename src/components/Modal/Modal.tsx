@@ -62,13 +62,17 @@ const ModalContent = styled.div`
   background-color: #121212;
   border-radius: 19px;
   z-index: 999;
+  outline: 1px solid #fff;
+  box-shadow: 1px 1px 10px 1px #000;
 
   @media (max-width: 768px) {
     width: 100%;
-    height: 50vh;  
+    height: 50vh;
     bottom: 0;
     position: fixed;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
+    border-top: 2px solid #fff;
+    outline: none;
   } ;
 `

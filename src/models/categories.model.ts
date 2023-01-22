@@ -1,7 +1,7 @@
-export type Category = 'Filmes' | 'Series' | 'Animes'
+export type Category = 'all' | 'movies' | 'shows' | 'animes'
 
 export type Categories = Category[]
 
 export const nullCategories: Categories = []
 
-export const defaultCategories: Categories = ['Filmes', 'Series', 'Animes']
+export const defaultCategories: Categories = ['all', 'movies', 'shows', 'animes']

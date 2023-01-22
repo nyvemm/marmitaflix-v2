@@ -1,6 +1,7 @@
+import { Category } from '@/models'
 import { createContext } from 'react'
 
 export const CategoryContext = createContext({
-  categoryContext: '',
-  setCategoryContext: (value: string) => {},
+  category: 'all' as Category,
+  setCategory: (value: Category) => {},
 })

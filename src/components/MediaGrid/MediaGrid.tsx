@@ -5,6 +5,7 @@ import { useContext, useEffect, useRef, useState } from 'react'
 import { ActivityIndicator } from '../ActivityIndicator/ActivityIndicator'
 import { ModalContext } from '@/contexts/ModalContext'
 import { MoviesModel } from '@/models'
+import PullToRefresh from 'react-simple-pull-to-refresh'
 
 export type MediaGridProps = {
   movies: MoviesModel
@@ -24,7 +25,7 @@ export const MediaGrid = ({ movies, isLoading, onFetchMore }: MediaGridProps) =>
       if (!containerRef.current) return
 
       const { scrollHeight, clientHeight, scrollTop } = containerRef.current
-      if (scrollHeight - clientHeight <= scrollTop) {
+      if (scrollHeight - clientHeight <= scrollTop + scrollHeight * 0.2) {
         setIsFetching(true)
         onFetchMore()
       }
@@ -39,6 +40,10 @@ export const MediaGrid = ({ movies, isLoading, onFetchMore }: MediaGridProps) =>
     window.history.pushState(null, '', `?q=${slug}`)
   }
 
+  const handleRefresh = async () => {
+    window.location.reload()
+  }
+
   useEffect(() => {
     setIsFetching(false)
   }, [movies])
@@ -46,13 +51,19 @@ export const MediaGrid = ({ movies, isLoading, onFetchMore }: MediaGridProps) =>
   if (movies.length === 0) return <ActivityIndicator withContainer />
 
   return (
-    <>
-      <S.MediaGridContainer ref={containerRef}>
+    <PullToRefresh onRefresh={handleRefresh} resistance={2} pullingContent={<></>}>
+      <S.MediaGridContainer ref={containerRef} id="media-grid">
         {movies.map((movie) => (
-          <S.MediaGridItem key={movie.title} src={movie.image} alt={movie.title} loading="lazy" onClick={() => onPressItem(movie.slug)} />
+          <S.MediaGridItem
+            key={movie.title}
+            src={movie.image}
+            loading="lazy"
+            onClick={() => onPressItem(movie.slug)}
+            onError={(e) => e.currentTarget.remove()}
+          />
         ))}
         {/* {isFetching && !hasEnded && <ActivityIndicator />} */}
       </S.MediaGridContainer>
-    </>
+    </PullToRefresh>
   )
 }

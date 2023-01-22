@@ -18,6 +18,7 @@ export const SinglePage = ({ slug }: SinglePageProps) => {
   const { data, isLoading } = useQuery(['movie', slug], async () => {
     if (slug && slug?.length > 0) {
       const { data } = await axios.get<MovieModel>(`${baseUrl}/movies/${slug}`)
+
       return data
     }
     return {} as MovieModel
@@ -43,16 +44,20 @@ export const SinglePage = ({ slug }: SinglePageProps) => {
     window.open(`https://www.google.com/search?q=${title}`, '_blank')
   }
 
+  const onOpenImageSearch = (title?: string) => {
+    window.open(`https://www.google.com/search?q=${title}&tbm=isch`, '_blank')
+  }
+
   return (
     <S.SinglePageContainer>
-      <S.SinglePageImage src={data?.image} alt={data?.title} onClick={() => onOpenImage(data?.title)} />
+      <S.SinglePageImage src={data?.image} alt={data?.title} onClick={() => onOpenImageSearch(removeStringFromMovies(data?.title))} />
       <S.SinglePageContent>
         <S.SinglePageTitle onClick={() => onOpenImage(removeStringFromMovies(data?.title))}>
           {removeStringFromMovies(data?.title)}
         </S.SinglePageTitle>
         <S.SinglePageDescription>{data?.description}</S.SinglePageDescription>
         {data?.links?.map((link) => (
-          <S.SinglePageLinkContainer>
+          <S.SinglePageLinkContainer key={link.label}>
             <S.SinglePageLinkTitle>{link.label}</S.SinglePageLinkTitle>
             <S.SinglePageLinkGroup>
               <S.SinglePageLinkButton onClick={() => onCopyLinkToClipboard(link.link)}>

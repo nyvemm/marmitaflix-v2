@@ -2,13 +2,16 @@ import * as S from './Navbar.styled'
 
 import { useContext, useEffect, useState } from 'react'
 
+import { Category } from '@/models'
+import { CategoryContext } from '@/contexts/CategoryContext'
 import { FiSearch } from 'react-icons/fi'
 import { FiX } from 'react-icons/fi'
 import { SearchContext } from '@/contexts/SearchContext'
 
 export const Navbar = () => {
   const [search, setSearch] = useState('')
-  const { setSearchInput } = useContext(SearchContext)
+  const { searchInput, setSearchInput } = useContext(SearchContext)
+  const { category, setCategory } = useContext(CategoryContext)
 
   const onPressEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -21,8 +24,18 @@ export const Navbar = () => {
   }
 
   const onResetSearch = () => {
-    window.location.href = '/'
-
+    window.history.pushState({}, '', '/')
+    setSearch('')
+    setSearchInput('')
+    setCategory('all')
+    const mediaGrid = document.getElementById('media-grid')
+    if (mediaGrid) {
+      mediaGrid.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth',
+      })
+    }
   }
 
   useEffect(() => {
@@ -32,6 +45,14 @@ export const Navbar = () => {
       setSearch(querySearch)
     }
   }, [])
+
+  const toggleCategory = (newCategory: Category) => {
+    if (category === newCategory) {
+      setCategory('all')
+    } else {
+      setCategory(newCategory)
+    }
+  }
 
   return (
     <S.HeaderContainer>
@@ -50,11 +71,19 @@ export const Navbar = () => {
           </S.NavSearchContainer>
         </S.NavbarWrapper>
       </S.NavbarContainer>
-      <S.NavLinksContainer>
-        <S.NavLinksItem>Filmes</S.NavLinksItem>
-        <S.NavLinksItem>Séries</S.NavLinksItem>
-        <S.NavLinksItem>Animes</S.NavLinksItem>
-      </S.NavLinksContainer>
+      {searchInput === '' && (
+        <S.NavLinksContainer>
+          <S.NavLinksItem onClick={() => toggleCategory('movies')} selected={category === 'movies'}>
+            Filmes
+          </S.NavLinksItem>
+          <S.NavLinksItem onClick={() => toggleCategory('shows')} selected={category === 'shows'}>
+            Séries
+          </S.NavLinksItem>
+          <S.NavLinksItem onClick={() => toggleCategory('animes')} selected={category === 'animes'}>
+            Animes
+          </S.NavLinksItem>
+        </S.NavLinksContainer>
+      )}
     </S.HeaderContainer>
   )
 }

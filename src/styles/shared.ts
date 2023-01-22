@@ -14,6 +14,5 @@ export const GlobalContainer = styled.div`
   @media only screen and (max-width: 600px) {
     display: flex;
     flex-direction: column;
-    padding-top: 80px;
   }
 `

@@ -7,6 +7,11 @@ export const HeaderContainer = styled.div`
   top: 0;
   width: 100%;
   z-index: 1;
+
+  @media only screen and (max-width: 600px) {
+    top: auto;
+    bottom: 0;
+  }
 `
 
 export const NavbarContainer = styled.nav`
@@ -94,7 +99,9 @@ export const NavLinksContainer = styled.ul`
   }
 `
 
-export const NavLinksItem = styled.li`
+export const NavLinksItem = styled.li<{
+  selected?: boolean
+}>`
   align-items: center;
   color: #fff;
   cursor: pointer;
@@ -109,6 +116,12 @@ export const NavLinksItem = styled.li`
   &:hover {
     opacity: 0.75;
   }
+
+  ${({ selected }) =>
+    selected &&
+    `
+    background: #121212;
+    `}
 `
 
 export const NavSearchContainer = styled.div`

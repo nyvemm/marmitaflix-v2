@@ -9,7 +9,7 @@ export const NotFound = () => {
 
   return (
     <S.NotFoundContainer>
-      <S.NotFoundTitle>Não encontramos resultados para "{searchInput}"</S.NotFoundTitle>
+      <S.NotFoundTitle>Não encontramos resultados para &quot;{searchInput}&quot;</S.NotFoundTitle>
       <S.NotFoundBulletList>
         <S.NotFoundBulletListItem>Tente procurar por palavras-chaves diferentes</S.NotFoundBulletListItem>
         <S.NotFoundBulletListItem>Tente procurar o nome de um filme, série ou anime</S.NotFoundBulletListItem>

@@ -5,11 +5,14 @@ export const SinglePageContainer = styled.div`
   flex-direction: row;
   width: 100%;
   height: 100%;
+
+  @media (max-width: 600px) {
+    padding-bottom: 2rem;
+  }
 `
 
 export const SinglePageImage = styled.img`
-  max-width: 300px;
-  width: 100%;
+  width: 300px;
   height: auto;
   object-fit: cover;
   border-radius: 10px;
@@ -25,6 +28,7 @@ export const SinglePageImage = styled.img`
 `
 
 export const SinglePageContent = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -35,6 +39,7 @@ export const SinglePageContent = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
+  scrollbar-width: none;
 `
 
 export const SinglePageTitle = styled.h1`

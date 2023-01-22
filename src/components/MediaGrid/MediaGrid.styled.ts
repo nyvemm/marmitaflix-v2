@@ -13,32 +13,39 @@ export const MediaGridContainer = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
+  scrollbar-width: none;
 
   @media only screen and (max-width: 600px) {
     height: calc(100vh);
     width: 100vw;
-    grid-gap: 0;
     padding: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0;
   }
 `
 
 export const MediaGridItem = styled.img`
   width: 100%;
-  height: 100%;
-  max-height: 327px;
   object-fit: cover;
   cursor: pointer;
   transition: all 0.1s ease-in-out;
   border-radius: 0.5rem;
 
-  &:hover {
-    transform: scale(1.05);
-    border: 1px solid #fff;
+  @media only screen and (min-width: 600px) {
+    &:hover {
+      transform: scale(1.05);
+      border: 1px solid #fff;
+    }
   }
 
   @media only screen and (max-width: 600px) {
+    flex: 1 1 150px;
+    width: 150px;
     border-radius: 0;
-    max-height: 100%;
+    object-fit: cover;
   }
 `
 

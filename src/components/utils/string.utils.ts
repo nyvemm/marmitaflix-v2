@@ -36,7 +36,15 @@ export const removeStringFromMovies = (title?: string): string => {
     'Google Drive',
     '4K',
     'Assistir Online',
+    'Desenho',
+    'Completa',
+    'Completo',
+    'Ultra HD',
+    'Terabox',
+    'Série',
+    "Séries",
+    
     '/ ',
-    '- '
+    '- ',
   ])
 }
