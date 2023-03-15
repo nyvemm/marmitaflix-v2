@@ -12,7 +12,7 @@ export type SinglePageProps = {
   slug: string
 }
 
-const baseUrl = 'https://gomarmitaflix.herokuapp.com'
+const baseUrl = '/api'
 
 export const SinglePage = ({ slug }: SinglePageProps) => {
   const { data, isLoading } = useQuery(['movie', slug], async () => {

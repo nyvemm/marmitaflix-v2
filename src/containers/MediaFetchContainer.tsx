@@ -1,5 +1,5 @@
 import { MediaGrid, Navbar, NotFound } from '@/components'
-import { useContext, useEffect, useMemo, useState } from 'react'
+import { useContext, useMemo, useState } from 'react'
 
 import { CategoryContext } from '@/contexts/CategoryContext'
 import { GlobalContainer } from '@/styles/shared'
@@ -8,7 +8,7 @@ import { SearchContext } from '@/contexts/SearchContext'
 import axios from 'axios'
 import { useQuery } from 'react-query'
 
-const baseUrl = 'https://gomarmitaflix.herokuapp.com'
+const baseUrl = '/api'
 
 export type MediaFetchContainerProps = {
   searchUrl?: string
@@ -37,16 +37,16 @@ export default function MediaFetchContainer({ searchUrl }: MediaFetchContainerPr
       setOldCategory(category)
     }
     if (searchUrl !== '') {
-      return `${baseUrl}/movies/search/${searchUrl}/${page}`
+      return `${baseUrl}/movies/search/${searchUrl}?page=${page}`
     } else if (category !== 'all') {
       let mappedCategories = {
         movies: 'filmes',
         shows: 'series',
         animes: 'desenhos',
       }
-      return `${baseUrl}/movies/categories/${mappedCategories[category]}/${page}`
+      return `${baseUrl}/movies?category=${mappedCategories[category]}&page=${page}`
     } else {
-      return `${baseUrl}/movies/all/${page}`
+      return `${baseUrl}/movies?page=${page}`
     }
   }, [page, searchUrl, category])
 
