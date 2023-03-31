@@ -16,7 +16,6 @@ export type MediaGridProps = {
 }
 
 export const MediaGrid = ({ movies, isLoading, onFetchMore }: MediaGridProps) => {
-  const [isFetching, setIsFetching] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const { setSlug } = useContext(ModalContext)
 
@@ -25,15 +24,17 @@ export const MediaGrid = ({ movies, isLoading, onFetchMore }: MediaGridProps) =>
       if (!containerRef.current) return
 
       const { scrollHeight, clientHeight, scrollTop } = containerRef.current
-      if (scrollHeight - clientHeight <= scrollTop + scrollHeight * 0.2) {
-        setIsFetching(true)
-        onFetchMore()
+      console.log(scrollHeight - clientHeight, scrollTop - 200)
+      if (scrollHeight - clientHeight <= scrollTop) {
+        if (!isLoading) {
+          onFetchMore()
+        }
       }
     }
 
     containerRef.current?.addEventListener('scroll', handleScroll)
     return () => containerRef?.current?.removeEventListener('scroll', handleScroll)
-  }, [isLoading, isFetching, onFetchMore])
+  }, [isLoading, onFetchMore])
 
   const onPressItem = (slug: string) => {
     setSlug(slug)
@@ -43,10 +44,6 @@ export const MediaGrid = ({ movies, isLoading, onFetchMore }: MediaGridProps) =>
   const handleRefresh = async () => {
     window.location.reload()
   }
-
-  useEffect(() => {
-    setIsFetching(false)
-  }, [movies])
 
   if (movies.length === 0) return <ActivityIndicator withContainer />
 
@@ -62,7 +59,7 @@ export const MediaGrid = ({ movies, isLoading, onFetchMore }: MediaGridProps) =>
             onError={(e) => e.currentTarget.remove()}
           />
         ))}
-        {/* {isFetching && !hasEnded && <ActivityIndicator />} */}
+        {isLoading && <ActivityIndicator />}
       </S.MediaGridContainer>
     </PullToRefresh>
   )

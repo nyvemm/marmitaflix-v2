@@ -33,52 +33,62 @@ async function fetchData(url: string): Promise<Movie> {
   const { data: html } = await axios.get(url)
   const $ = cheerio.load(html)
 
-  const elementMovieImage = $('img.img-fluid')
+  const elementMovieImage = $('img.jetpack-lazy-image')
   if (!elementMovieImage.length) {
     throw new Error('Not Found')
   }
   const movieImage = elementMovieImage.attr('src')
 
-  const infoDiv = $('#informacoes')
+  const infoDiv = $('div.entry-content')
   if (!infoDiv.length) {
     throw new Error('Not Found')
   }
 
-  const movieTitle = infoDiv.find('strong').html()
+  const movieTitle = $('.entry-title > a').first().text()
 
-  const sinopseDiv = $('#sinopse')
-  if (!sinopseDiv.length) {
+  const sinopseDiv = infoDiv.find('p')
+  let movieSinopse = ''
+  for (let i = 0; i < sinopseDiv.length; i++) {
+    const style = $(sinopseDiv[i]).attr('style')
+    if (style && style.includes('text-align: justify')) {
+      movieSinopse = $(sinopseDiv[i]).text()
+      break
+    }
+  }
+  if (!movieSinopse.length) {
     throw new Error('Not Found')
   }
-  const movieSinopse = sinopseDiv.find('p').text().trim()
+  console.log(movieSinopse)
 
   let movieEmbed = ''
-  const embedIframe = $('iframe.embed-responsive-item')
-  if (embedIframe.length) {
-    movieEmbed = embedIframe.attr('src') || ''
-  }
+  const embedIframe = $('iframe').first()
+  movieEmbed = embedIframe.attr('src') || ''
 
   const movieLinks: { label: string; link: string }[] = []
-  const downloadP = $('#lista_download')
+  const downloadP = infoDiv.find('a')
   if (!downloadP.length) {
     throw new Error('Not Found')
   }
-  downloadP.find('span').each((i, el) => {
-    const label = $(el).text()
-    movieLinks.push({ label: getMovieLinkText(label), link: '' })
-  })
-  const downloadLinks = downloadP.find('a.btn')
-  downloadLinks.each((i, el) => {
-    const link = $(el).attr('href') || ''
-    if (i < movieLinks.length) {
-      movieLinks[i].link = link
-    }
-  })
 
+  for (let i = 0; i < downloadP.length; i++) {
+    const href = $(downloadP[i]).attr('href')
+    if (href && href.includes('magnet')) {
+      const parentElement = $(downloadP[i]).parent()
+      if (parentElement) {
+        const leftParentSibling = parentElement.prev()
+        if (leftParentSibling) {
+          const siblingText = leftParentSibling.text()
+          movieLinks.push({ label: siblingText, link: href ?? '' })
+        }
+      }
+    }
+  }
+
+  console.log(url.split('/'))
   const movie: Movie = {
     title: movieTitle,
     image: movieImage,
-    slug: url.split('/').pop() || '',
+    slug: url.split('/').at(-2) || '',
     description: movieSinopse || undefined,
     embed: movieEmbed || undefined,
     links: movieLinks,

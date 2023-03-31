@@ -15,11 +15,11 @@ interface Movie {
 async function fetchData(url: string): Promise<Movie[]> {
   const { data: html } = await axios.get(url)
   const $ = cheerio.load(html)
-  const movies = $('div.capa_lista')
+  const movies = $('article.blog-view')
 
   const moviesList: Movie[] = movies
     .map((i, el) => ({
-      title: $(el).find('a').attr('title'),
+      title: $(el).find('h2').text(),
       image: $(el).find('img').attr('src'),
       slug: getSlugFromLink($(el).find('a').attr('href') || ''),
     }))
@@ -31,7 +31,19 @@ async function fetchData(url: string): Promise<Movie[]> {
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { page = '1', category } = req.query
   const defaultURL = process.env.DEFAULT_URL || baseUrl
-  const url = category ? `${defaultURL}/${category}/${page}/` : `${defaultURL}/${page}/`
+  let url = defaultURL
+
+  if (category === 'filmes') {
+    url += 'filmes/'
+  } else if (category === 'series') {
+    url += 'genero/nacional/'
+  } else if (category === 'desenhos') {
+    url += 'genero/animacao/'
+  }
+
+  if (page !== '1') {
+    url += `page/${page}/`
+  }
 
   try {
     const cacheFetchData = cacheWrapper(fetchData, 500)

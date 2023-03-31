@@ -3,6 +3,7 @@ import styled from 'styled-components'
 export const MediaGridContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-auto-rows: 310px;
   grid-gap: 1rem;
   padding: 1rem;
   margin: 0 auto;

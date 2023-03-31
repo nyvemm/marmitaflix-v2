@@ -1,5 +1,5 @@
 import { MediaGrid, Navbar, NotFound } from '@/components'
-import { useContext, useMemo, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 
 import { CategoryContext } from '@/contexts/CategoryContext'
 import { GlobalContainer } from '@/styles/shared'
@@ -7,6 +7,7 @@ import { MoviesModel } from '@/models'
 import { SearchContext } from '@/contexts/SearchContext'
 import axios from 'axios'
 import { useQuery } from 'react-query'
+import { Spinner } from 'react-activity'
 
 const baseUrl = '/api'
 
@@ -56,7 +57,7 @@ export default function MediaFetchContainer({ searchUrl }: MediaFetchContainerPr
       setHasEnded(true)
       return data
     }
-    if (page === 1) {
+    if (page < 3) {
       onFetchMore()
     }
     const uniqueSlugs = new Set(moviesData.map((movie) => movie.slug))
