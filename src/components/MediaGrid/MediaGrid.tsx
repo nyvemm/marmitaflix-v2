@@ -24,7 +24,6 @@ export const MediaGrid = ({ movies, isLoading, onFetchMore }: MediaGridProps) =>
       if (!containerRef.current) return
 
       const { scrollHeight, clientHeight, scrollTop } = containerRef.current
-      console.log(scrollHeight - clientHeight, scrollTop - 200)
       if (scrollHeight - clientHeight <= scrollTop) {
         if (!isLoading) {
           onFetchMore()

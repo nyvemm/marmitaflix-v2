@@ -8,11 +8,9 @@ export function cacheWrapper<T extends (...args: any[]) => Promise<any>>(fn: T, 
     const cachedResult = cache.get(key)
 
     if (cachedResult) {
-      console.log('Cache hit')
       return cachedResult as ReturnType<T>
     }
 
-    console.log('Cache miss')
     const result = await fn(...args)
     cache.set(key, result, ttl)
 
