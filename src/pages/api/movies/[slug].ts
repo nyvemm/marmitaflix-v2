@@ -11,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const service = new MovieService(defaultURL)
-    const cacheFetchData = cacheWrapper(service.fetchMovieData, 500)
+    const cacheFetchData = cacheWrapper(service.fetchMovieData, 432000)
     const result = await cacheFetchData(slug)
     res.json(result)
   } catch (error) {

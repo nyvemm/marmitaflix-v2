@@ -62,22 +62,22 @@ class MovieService {
     }
   }
 
-  async fetchMovieData(slug: string): Promise<Movie> {
+  async fetchMovieData(movieSlug: string): Promise<Movie> {
     try {
-      const url = `${this.baseURL}${slug}`
-      const pageHtml = await HTTPService.fetchHtml(url)
+      const movieUrl = `${this.baseURL}${movieSlug}`
+      const pageHtml = await HTTPService.fetchHtml(movieUrl)
       const cheerioInstance = cheerio.load(pageHtml)
-      const movieData = cheerioInstance('img.jetpack-lazy-image')
+      const movieImageData = cheerioInstance('img.jetpack-lazy-image')
 
-      if (!movieData || !movieData.length) {
-        throw new Error('Not Found')
+      if (!movieImageData || !movieImageData.length) {
+        throw new Error('Movie image not found')
       }
 
-      const movieImage = movieData.attr('src')
+      const movieImage = movieImageData.attr('src')
       const movieInfoDiv = cheerioInstance('div.entry-content')
 
       if (!movieInfoDiv || !movieInfoDiv.length) {
-        throw new Error('Not Found')
+        throw new Error('Movie information not found')
       }
 
       const movieTitle = cheerioInstance('.entry-title > a').first().text()
@@ -93,39 +93,40 @@ class MovieService {
       }
 
       if (!movieSummary || !movieSummary.length) {
-        throw new Error('Not Found')
+        throw new Error('Movie summary not found')
       }
 
-      let movieEmbed = ''
+      let movieEmbedUrl = ''
       const embedIframe = cheerioInstance('iframe').first()
-      movieEmbed = embedIframe.attr('src') || ''
+      movieEmbedUrl = embedIframe.attr('src') || ''
 
-      const movieLinks: { label: string; link: string }[] = []
-      const downloadP = movieInfoDiv.find('a')
-      if (!downloadP || !downloadP.length) {
-        throw new Error('Not Found')
+      const movieDownloadLinks: { label: string; link: string }[] = []
+      const downloadLinks = movieInfoDiv.find('a')
+      if (!downloadLinks || !downloadLinks.length) {
+        throw new Error('Movie download links not found')
       }
 
-      for (let i = 0; i < downloadP.length; i++) {
-        const href = cheerioInstance(downloadP[i]).attr('href')
+      for (let i = 0; i < downloadLinks.length; i++) {
+        const href = cheerioInstance(downloadLinks[i]).attr('href')
         if (href && href.includes('magnet')) {
-          const parentElement = cheerioInstance(downloadP[i]).parent()
+          const parentElement = cheerioInstance(downloadLinks[i]).parent()
           if (parentElement) {
             const leftParentSibling = parentElement.prev()
             if (leftParentSibling) {
               const siblingText = leftParentSibling.text()
-              movieLinks.push({ label: siblingText, link: href ?? '' })
+              movieDownloadLinks.push({ label: siblingText, link: href ?? '' })
             }
           }
         }
       }
+
       const movie: Movie = {
         title: movieTitle,
         image: movieImage,
-        slug: url.split('/').at(-2) || '',
+        slug: movieUrl.split('/').at(-2) || '',
         description: movieSummary || undefined,
-        embed: movieEmbed || undefined,
-        links: movieLinks,
+        embed: movieEmbedUrl || undefined,
+        links: movieDownloadLinks,
       }
 
       return movie
@@ -133,13 +134,13 @@ class MovieService {
       console.log(error)
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 404) {
-          throw new Error('Not Found')
+          throw new Error('Movie not found')
         }
       } else {
-        console.error(`Error fetching data from ${slug}`)
-        throw new Error('Failed to fetch movies data')
+        console.error(`Error fetching data for movie: ${movieSlug}`)
+        throw new Error('Failed to fetch movie data')
       }
-      return { slug }
+      return { slug: movieSlug }
     }
   }
 }
